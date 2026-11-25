@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kompas Moral: Harmoni Di Sebalik Pembangunan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2a1f4a; --muted:#5d5578; --paper:#f4f2f8; --card:#ffffff; --line:#ddd8ea;
+    --purple:#5b4b9a; --purple-2:#7b6cc0; --red:#c8323c; --red-soft:#fbe4e5;
+    --gold:#e9c43a; --gold-ink:#8a6d00; --gold-soft:#fdf5d6; --green:#2f8a5b; --green-soft:#e2f3ea;
+    --teal:#2b7f8e; --teal-soft:#dff0f2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100%}
+  body{font-family:"Nunito",system-ui,sans-serif;color:var(--ink);
+    background:linear-gradient(170deg,#7b84c9 0%,#a7a7cf 40%,#e8d77a 100%) fixed;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:540px;margin:0 auto;padding:18px 16px 40px;min-height:100vh;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;color:#fff}
+  .brand{font-family:"Lilita One",cursive;font-size:18px;letter-spacing:.3px}
+  .count{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);padding:5px 11px;border-radius:999px;font-weight:800;font-size:14px}
+  .progress{height:8px;background:rgba(255,255,255,.35);border-radius:99px;overflow:hidden;margin-bottom:16px}
+  .progress i{display:block;height:100%;width:0;background:var(--red);border-radius:99px;transition:width .3s ease}
+  .card{background:var(--card);border-radius:20px;padding:22px 20px;box-shadow:0 10px 30px rgba(42,31,74,.18);flex:1;display:flex;flex-direction:column}
+  .tag{display:inline-block;align-self:flex-start;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:4px 10px;border-radius:99px;background:var(--gold-soft);color:var(--gold-ink);margin-bottom:12px}
+  h1{font-family:"Lilita One",cursive;font-weight:400;font-size:30px;line-height:1.08;color:var(--purple);margin-bottom:10px}
+  h2{font-family:"Lilita One",cursive;font-weight:400;font-size:22px;line-height:1.2;color:var(--ink);margin-bottom:10px}
+  h3{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--purple);margin-bottom:8px}
+  p{font-size:16px;line-height:1.5;color:var(--muted)}
+  .lead{font-size:17px;color:var(--ink);margin-bottom:14px}
+  button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .primary{width:100%;border:none;border-radius:14px;padding:16px;background:var(--red);color:#fff;font-weight:800;font-size:18px;box-shadow:0 4px 0 #8f1f27}
+  .primary:active{transform:translateY(2px);box-shadow:0 2px 0 #8f1f27}
+  .primary[disabled]{opacity:.45;cursor:default}
+  .ghost{width:100%;border:2px solid var(--purple);background:#fff;color:var(--purple);border-radius:14px;padding:13px;font-weight:800;font-size:16px}
+  .axes4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 18px}
+  .ax{background:var(--paper);border-radius:12px;padding:11px 12px}
+  .ax b{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--purple)}
+  .ax span{font-size:14.5px;font-weight:700;color:var(--ink)}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .meta span{font-size:13px;font-weight:800;background:var(--paper);border-radius:99px;padding:5px 11px;color:var(--muted)}
+
+  /* question */
+  .qwrap{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:10px 0 4px}
+  .stmt{font-size:20px;line-height:1.42;font-weight:700;color:var(--ink);margin:6px 0 30px;min-height:120px;display:flex;align-items:center;justify-content:center}
+  .likert{display:flex;align-items:center;justify-content:center;gap:8px}
+  .lk{border-radius:50%;border:3px solid;background:#fff;flex:0 0 auto;transition:transform .1s,background .15s}
+  .lk:active{transform:scale(.92)}
+  .lk.a{border-color:var(--green)} .lk.a.on,.lk.a:hover{background:var(--green)}
+  .lk.d{border-color:var(--purple)} .lk.d.on,.lk.d:hover{background:var(--purple)}
+  .lk.n{border-color:#b9b3cc} .lk.n.on,.lk.n:hover{background:#b9b3cc}
+  .lklab{display:flex;justify-content:space-between;font-size:13.5px;font-weight:800;margin-top:10px;padding:0 2px}
+  .lklab .a{color:var(--green)} .lklab .d{color:var(--purple)}
+  .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:26px}
+  .back{background:none;border:none;color:var(--purple);font-weight:800;font-size:15px;padding:6px 0}
+  .back[disabled]{visibility:hidden}
+  .qhint{font-size:13px;color:var(--muted)}
+
+  /* loading */
+  .loading{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+  .spin{font-size:56px;animation:spin 1.1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* result */
+  .hero{text-align:center;padding:4px 0 6px}
+  .avatar{width:96px;height:96px;margin:0 auto 10px;border-radius:28px;display:grid;place-items:center;font-size:52px;background:linear-gradient(135deg,var(--gold-soft),var(--red-soft));border:3px solid var(--gold)}
+  .kicker{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+  .tname{font-family:"Lilita One",cursive;font-size:32px;line-height:1.1;color:var(--purple);margin:4px 0 6px}
+  .code{display:inline-flex;gap:6px;margin-bottom:12px}
+  .code span{width:36px;height:40px;border-radius:9px;display:grid;place-items:center;font-family:"Lilita One";font-size:22px;color:#fff}
+  .tagline{font-size:16.5px;line-height:1.5;color:var(--ink)}
+  .sec{border-top:1px solid var(--line);padding-top:16px;margin-top:18px}
+  .bar{margin-bottom:14px}
+  .bar .top{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:5px}
+  .bar .top .win{color:var(--ink);font-weight:800}
+  .track{height:12px;border-radius:99px;background:var(--paper);position:relative;overflow:hidden}
+  .track i{position:absolute;top:0;bottom:0;border-radius:99px}
+  .bar .pct{font-size:13px;font-weight:800;margin-top:4px}
+  ul.clean{list-style:none;display:grid;gap:8px}
+  ul.clean li{font-size:15.5px;line-height:1.45;color:var(--ink);padding-left:26px;position:relative}
+  ul.clean li::before{content:attr(data-i);position:absolute;left:0;top:0}
+  .vorder{display:grid;gap:8px;margin-bottom:10px}
+  .vo{display:flex;gap:10px;align-items:center;background:var(--paper);border-radius:12px;padding:10px 12px;font-weight:800;font-size:15px}
+  .vo span{flex:0 0 28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;display:grid;place-items:center;font-family:"Lilita One";font-size:15px}
+  .vo small{display:block;font-weight:600;color:var(--muted);font-size:13px}
+  .note{background:var(--gold-soft);border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.5;color:#5c4800}
+  .mate{display:flex;gap:12px;align-items:center;background:var(--teal-soft);border-radius:14px;padding:12px 14px}
+  .mate .e{font-size:34px}
+  .mate b{display:block;color:var(--teal);font-size:16px}
+  .mate p{font-size:14.5px;color:var(--ink)}
+  .meter{height:16px;border-radius:99px;background:linear-gradient(90deg,#f0b4b8,#f5dd84,#9fd8b7);position:relative;margin:10px 0 8px}
+  .meter i{position:absolute;top:-5px;width:6px;height:26px;border-radius:3px;background:var(--ink);transform:translateX(-50%)}
+  .mlabel{font-weight:800;font-size:16px;color:var(--ink)}
+  .private{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .grid16{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .t16{border-radius:10px;background:var(--paper);padding:7px 3px;text-align:center;border:2px solid transparent}
+  .t16 .e{font-size:20px;line-height:1.1}
+  .t16 .c{font-family:"Lilita One";font-size:12.5px;color:var(--purple);letter-spacing:.5px}
+  .t16 .n{font-size:10.5px;font-weight:700;line-height:1.2;color:var(--muted)}
+  .t16.me{border-color:var(--red);background:var(--red-soft)}
+  .t16.mate16{border-color:var(--teal);border-style:dashed}
+  .legend{font-size:12.5px;color:var(--muted);margin-top:8px;display:flex;gap:14px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+  .pledges{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+  .pl{text-align:left;background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px;font-weight:700;color:var(--ink);position:relative}
+  .pl.on{border-color:var(--red);background:var(--red-soft)}
+  .pl em{display:block;width:fit-content;font-style:normal;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;background:var(--gold);color:#3d3000;border-radius:99px;padding:2px 8px;margin-bottom:5px}
+  .pl em + br{display:none}
+
+  /* final card */
+  .certificate{border:3px solid var(--gold);border-radius:20px;padding:20px 16px;text-align:center;background:linear-gradient(180deg,#fffdf3,#fff)}
+  .certificate .tname{font-size:28px}
+  .certificate .pledge{font-size:16px;font-weight:700;color:var(--ink);background:var(--paper);border-radius:12px;padding:12px;margin:12px 0}
+  .mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left}
+  .mini div{background:var(--paper);border-radius:12px;padding:9px 11px;font-size:13.5px;color:var(--muted)}
+  .mini b{display:block;color:var(--ink);font-size:14.5px}
+  .motto{margin-top:14px;font-family:"Lilita One";font-size:17px;color:var(--purple);line-height:1.3}
+  .hint{text-align:center;font-size:13.5px;color:var(--muted);margin-top:12px;line-height:1.45}
+  .stack{display:grid;gap:10px;margin-top:14px}
+  .fade{animation:pop .25s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🌺 Kompas Moral</div>
+    <div class="count" id="count">16 Jenis Harmoni</div>
+  </header>
+  <div class="progress"><i id="bar"></i></div>
+  <main class="card" id="app"></main>
+</div>
+
+<script>
+/* ---------- Axes ---------- */
+const AXES = [
+  {id:'P', label:'Prinsip', a:'U', b:'E', color:'var(--purple)'},
+  {id:'A', label:'Pentas',  a:'M', b:'N', color:'var(--teal)'},
+  {id:'S', label:'Skala',   a:'I', b:'K', color:'var(--gold-ink)'},
+  {id:'G', label:'Gaya',    a:'S', b:'T', color:'var(--red)'}
+];
+const POLE = {
+  U:{name:'Undang-Undang', long:'Berpegang pada Kedaulatan Undang-Undang',
+     str:'Adil dan konsisten: anda melayan semua orang dengan peraturan yang sama, tanpa mengira asal usul.',
+     blind:'Terlalu berpegang pada peraturan boleh membuatkan anda lupa ada manusia dan keluarga di sebalik setiap kes.'},
+  E:{name:'Empati', long:'Berpegang pada Hormat dan empati (MADANI)',
+     str:'Anda melihat manusia dahulu, bukan label atau negara asalnya.',
+     blind:'Simpati boleh membuatkan anda menutup mata terhadap masalah sebenar, seperti kuarters sesak atau salah laku yang perlu dilaporkan.'},
+  M:{name:'Maya', long:'Bertindak di alam maya',
+     str:'Anda faham kuasa media sosial dalam membentuk persepsi masyarakat.'},
+  N:{name:'Nyata', long:'Bertindak di dunia nyata',
+     str:'Anda percaya hubungan sebenar dibina secara bersemuka.'},
+  I:{name:'Individu', long:'Bermula dengan diri sendiri',
+     str:'Anda tidak menunggu orang lain untuk mula berubah.'},
+  K:{name:'Komuniti', long:'Menggerakkan komuniti',
+     str:'Anda pandai mengajak orang lain bergerak ke arah matlamat yang sama.'},
+  S:{name:'Suara', long:'Bersuara dan menegur',
+     str:'Anda berani bersuara apabila melihat ketidakadilan.',
+     blind:'Teguran yang terlalu keras boleh membuatkan orang mempertahankan diri. Tegur dengan berhemah.'},
+  T:{name:'Teladan', long:'Memimpin melalui teladan',
+     str:'Tindakan anda bercakap lebih kuat daripada kata-kata.',
+     blind:'Diam terlalu lama boleh disalah anggap sebagai setuju. Ada masanya anda perlu bersuara.'}
+};
+
+/* ---------- 16 types ---------- */
+const TYPES = {
+  UMIS:{n:'Pelapor Berhemah', e:'🛡️', t:'Anda melawan fitnah dan kebencian di alam maya dengan cara yang betul: semak fakta, lapor, dan tegur dengan berhemah.'},
+  UMIT:{n:'Netizen Teladan', e:'⚖️', t:'Anda tidak berkongsi sebelum menyemak, dan tidak menghina walaupun semua orang menghina. Akaun anda sendiri ialah contoh terbaik.'},
+  UMKS:{n:'Penggerak Kempen', e:'📢', t:'Anda mampu mengumpulkan suara ramai secara dalam talian untuk menuntut penguatkuasaan yang adil, seperti kuarters pekerja yang layak.'},
+  UMKT:{n:'Moderator Komuniti', e:'🧑‍💻', t:'Anda membina ruang dalam talian yang selamat: grup komuniti dengan peraturan yang jelas dan tiada ruang untuk kebencian.'},
+  UNIS:{n:'Penenang Suasana', e:'🚨', t:'Apabila keadaan tegang, anda orang yang berkata "serahkan kepada polis", bukan orang yang menghasut orang ramai.'},
+  UNIT:{n:'Warga Berprinsip', e:'🧭', t:'Anda patuh peraturan, adil kepada semua, dan tidak menilai seseorang berdasarkan negara asalnya.'},
+  UNKS:{n:'Wakil Penduduk', e:'🏛️', t:'Anda membawa aduan penduduk ke saluran yang betul, seperti majlis tempatan, supaya punca masalah diselesaikan dan bukan manusianya disalahkan.'},
+  UNKT:{n:'Arkitek Sistem', e:'🏗️', t:'Anda membina sistem yang adil di belakang tabir: peraturan, jadual dan kemudahan yang membolehkan semua hidup harmoni.'},
+  EMIS:{n:'Pembela Maya', e:'💬', t:'Anda antara yang pertama mempertahankan mangsa buli siber di ruang komen, dan anda melakukannya dengan adab.'},
+  EMIT:{n:'Penyebar Positif', e:'🌸', t:'Anda berkongsi kisah baik, bukan kisah benci. Suapan media sosial anda menjadikan internet lebih berperikemanusiaan.'},
+  EMKS:{n:'Pencerita Komuniti', e:'🎥', t:'Anda mengangkat kisah sebenar pekerja asing supaya orang ramai melihat manusia, bukan stereotaip.'},
+  EMKT:{n:'Penghubung Digital', e:'🤝', t:'Anda membina jambatan dalam talian: grup bantuan dan maklumat yang memudahkan pendatang dan penduduk saling memahami.'},
+  ENIS:{n:'Sahabat Berani', e:'🌺', t:'Anda menegur rakan yang menghina secara bersemuka, dan tidak segan berbual mesra dengan pekerja asing.'},
+  ENIT:{n:'Penyantun Senyap', e:'☕', t:'Senyuman, ucapan terima kasih, segelas air sejuk. Kebaikan kecil anda memartabatkan maruah orang lain.'},
+  ENKS:{n:'Jurucakap Harmoni', e:'🎤', t:'Anda menganjurkan dialog antara penduduk dan pekerja asing supaya salah faham diselesaikan dengan berbincang, bukan bertelagah.'},
+  ENKT:{n:'Penggerak Gotong-Royong', e:'🧹', t:'Anda mengajak semua turun padang bersama: gotong-royong, kenduri, sukan komuniti. Perpaduan dibina dengan tangan.'}
+};
+
+const ACTION = {
+  MI:'Hentikan buli siber: jangan "like" atau kongsi kandungan yang menghina, laporkan, dan tegur dengan sopan.',
+  MK:'Gunakan media sosial atau grup komuniti untuk berkempen tentang kuarters mesra pekerja dan berkongsi kisah positif.',
+  NI:'Layan pekerja yang anda temui dengan adab: senyum, ucap terima kasih, dan jangan menjaga jarak tanpa sebab.',
+  NK:'Anjurkan dialog atau gotong-royong bersama penduduk dan pekerja asing di kawasan anda.'
+};
+
+const PLEDGES = [
+  {k:'MS', t:'Saya akan menegur dengan sopan dan melaporkan kandungan yang menghina pekerja asing.'},
+  {k:'MT', t:'Saya tidak akan berkongsi kandungan yang menghina pekerja asing.'},
+  {k:'NS', t:'Saya akan menegur rakan yang bersikap "superiority complex" dengan berhemah.'},
+  {k:'NT', t:'Saya akan senyum dan ucap terima kasih kepada pekerja yang membantu kita.'},
+  {k:'U',  t:'Saya akan serahkan salah laku kepada pihak berkuasa, bukan menghukum sendiri.'},
+  {k:'K',  t:'Saya akan sertai atau anjurkan gotong-royong bersama pekerja di kawasan saya.'}
+];
+
+/* ---------- Statements ---------- */
+/* ax: axis id; p: pole that "Setuju" moves toward. ax 'O' = Meter Keterbukaan, s = +1 if agreeing means more open */
+const Q = [
+  {ax:'P', p:'U', t:'Jika timbul masalah dengan pekerja asing di kawasan saya, langkah pertama saya ialah melapor kepada pihak berkuasa.'},
+  {ax:'A', p:'M', t:'Media sosial ialah tempat paling berkesan untuk melawan stereotaip terhadap pekerja asing.'},
+  {ax:'S', p:'I', t:'Perubahan bermula dengan sikap saya sendiri, bukan dengan menunggu orang lain.'},
+  {ax:'G', p:'S', t:'Jika rakan saya membuat lawak yang menghina pekerja asing, saya akan menegurnya serta-merta.'},
+  {ax:'O', s:-1, t:'Saya akan menjaga jarak jika berselisih dengan sekumpulan pekerja asing di jalan.'},
+  {ax:'P', p:'E', t:'Saya lebih suka memahami keadaan seseorang dahulu sebelum membuat sebarang aduan.'},
+  {ax:'A', p:'N', t:'Satu ucapan terima kasih secara bersemuka lebih bermakna daripada seribu hantaran di media sosial.'},
+  {ax:'S', p:'K', t:'Saya lebih bersemangat apabila dapat mengajak penduduk lain membuat aktiviti bersama, seperti gotong-royong.'},
+  {ax:'G', p:'T', t:'Saya lebih suka menunjukkan contoh melalui perbuatan daripada berdebat.'},
+  {ax:'O', s:-1, t:'Pekerja asing patut bersyukur dapat bekerja di sini, jadi mereka tidak patut mengharapkan layanan yang lebih baik.'},
+  {ax:'P', p:'U', t:'Masalah kuarters yang sesak hanya akan selesai jika undang-undang terhadap majikan dikuatkuasakan dengan tegas.'},
+  {ax:'A', p:'M', t:'Saya lebih aktif menyuarakan pendapat di media sosial berbanding secara bersemuka.'},
+  {ax:'O', s:+1, t:'Saya pernah tertanya-tanya tentang kehidupan dan keluarga pekerja asing yang saya temui.'},
+  {ax:'S', p:'I', t:'Saya lebih selesa membuat kebaikan secara sendiri daripada mengajak orang lain menyertainya.'},
+  {ax:'G', p:'S', t:'Saya tidak teragak-agak menyuarakan pendapat walaupun ia berbeza daripada pendapat majoriti.'},
+  {ax:'O', s:-1, t:'Apabila seorang pekerja asing melakukan jenayah, saya rasa kebanyakan mereka berkemungkinan sama.'}
+];
+
+const LIKERT = [3,2,1,0,-1,-2,-3];           // left = Setuju
+const SIZES  = [42,35,29,24,29,35,42];
+
+/* ---------- State ---------- */
+let screen='intro', qi=0, answers=new Array(Q.length).fill(null), result=null, pledge=null;
+const app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function scrollUp(){ try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)} }
+function setBar(p){ document.getElementById('bar').style.width=p+'%'; }
+function setCount(t){ document.getElementById('count').textContent=t; }
+
+/* ---------- Scoring ---------- */
+function score(){
+  const out={axes:{}, code:''};
+  AXES.forEach(ax=>{
+    const items=Q.map((q,i)=>({q,a:answers[i]})).filter(x=>x.q.ax===ax.id);
+    const max=items.length*3;
+    let s=0, firstNonZero=0;
+    items.forEach(({q,a})=>{ const v=(a||0)*(q.p===ax.a?1:-1); s+=v; if(!firstNonZero && v) firstNonZero=v; });
+    let letter = s>0?ax.a : s<0?ax.b : (firstNonZero>0?ax.a:ax.b);
+    const pctA=Math.round((s+max)/(2*max)*100);
+    out.axes[ax.id]={letter, pctA, pctWin: letter===ax.a?pctA:100-pctA};
+    out.code+=letter;
+  });
+  const oi=Q.map((q,i)=>({q,a:answers[i]})).filter(x=>x.q.ax==='O');
+  const omax=oi.length*3; let o=0;
+  oi.forEach(({q,a})=>o+=(a||0)*q.s);
+  out.open=Math.round((o+omax)/(2*omax)*100);
+  return out;
+}
+
+function valueOrder(code){
+  const law={t:'Kedaulatan Undang-Undang', d:'Salah laku diserahkan kepada pihak berkuasa; majikan wajib sediakan kuarters layak'};
+  const hormat={t:'Hormat (Malaysia MADANI)', d:'Layan semua pekerja dengan empati, tanpa memandang rendah'};
+  const sopan={t:'Kesopanan & Kesusilaan', d:'Jaga adab di alam nyata dan media sosial'};
+  const [p,a]=code;
+  if(p==='U') return a==='M'?[law,sopan,hormat]:[law,hormat,sopan];
+  return a==='M'?[hormat,sopan,law]:[hormat,law,sopan];
+}
+
+/* ---------- Screens ---------- */
+function render(){
+  app.classList.remove('fade'); void app.offsetWidth; app.classList.add('fade');
+  ({intro,question,loading,results,card})[screen]();
+}
+
+function intro(){
+  setBar(0); setCount('16 Jenis Harmoni');
+  app.innerHTML=`
+    <span class="tag">Ujian Personaliti</span>
+    <h1>Apakah Jenis Harmoni Anda?</h1>
+    <p class="lead">Pekerja asing ialah tulang belakang pembangunan kita. Tetapi bagaimana <b>anda</b> bertindak menepis stereotaip dan mengangkat martabat mereka?</p>
+    <div class="meta"><span>16 kenyataan</span><span>± 2 minit</span><span>16 jenis</span></div>
+    <h3>Empat dimensi anda</h3>
+    <div class="axes4">
+      <div class="ax"><b>Prinsip</b><span>Undang-Undang (U) atau Empati (E)</span></div>
+      <div class="ax"><b>Pentas</b><span>Maya (M) atau Nyata (N)</span></div>
+      <div class="ax"><b>Skala</b><span>Individu (I) atau Komuniti (K)</span></div>
+      <div class="ax"><b>Gaya</b><span>Suara (S) atau Teladan (T)</span></div>
+    </div>
+    <p style="font-size:14px;margin-bottom:16px">Jawab dengan jujur. Keputusan hanya dipaparkan di telefon anda dan tidak disimpan.</p>
+    <button class="primary" id="go" style="margin-top:auto">Mula Ujian ➜</button>`;
+  document.getElementById('go').onclick=()=>{screen='question';qi=0;render();scrollUp();};
+}
+
+function question(){
+  const q=Q[qi];
+  setBar(qi/Q.length*100); setCount(`${qi+1} / ${Q.length}`);
+  app.innerHTML=`
+    <div class="qwrap">
+      <div class="stmt">${esc(q.t)}</div>
+      <div class="likert" role="radiogroup" aria-label="Tahap persetujuan">
+        ${LIKERT.map((v,i)=>`<button class="lk ${v>0?'a':v<0?'d':'n'} ${answers[qi]===v?'on':''}" data-v="${v}"
+          style="width:${SIZES[i]}px;height:${SIZES[i]}px"
+          aria-label="${['Sangat setuju','Setuju','Agak setuju','Neutral','Agak tidak setuju','Tidak setuju','Sangat tidak setuju'][i]}"></button>`).join('')}
+      </div>
+      <div class="lklab"><span class="a">Setuju</span><span class="d">Tidak setuju</span></div>
+    </div>
+    <div class="qnav">
+      <button class="back" id="bk" ${qi===0?'disabled':''}>← Kembali</button>
+      <span class="qhint">Tekan bulatan untuk menjawab</span>
+    </div>`;
+  app.querySelectorAll('.lk').forEach(b=>b.onclick=()=>{
+    answers[qi]=+b.dataset.v;
+    app.querySelectorAll('.lk').forEach(x=>x.classList.toggle('on',x===b));
+    setTimeout(()=>{
+      if(qi<Q.length-1){qi++;render();}
+      else{screen='loading';render();}
+    },220);
+  });
+  document.getElementById('bk').onclick=()=>{ if(qi>0){qi--;render();} };
+}
+
+function loading(){
+  setBar(100); setCount('Menganalisis...');
+  app.innerHTML=`<div class="loading"><div class="spin">🧭</div><h2>Menentukan arah kompas anda...</h2></div>`;
+  result=score();
+  setTimeout(()=>{screen='results';render();scrollUp();},1100);
+}
+
+function results(){
+  const r=result, T=TYPES[r.code], c=r.code;
+  const mateCode=(c[0]==='U'?'E':'U')+c.slice(1), M=TYPES[mateCode];
+  setCount(c);
+  const strengths=[POLE[c[0]].str, POLE[c[1]].str, POLE[c[2]].str, POLE[c[3]].str];
+  const blinds=[POLE[c[0]].blind, POLE[c[3]].blind];
+  const vo=valueOrder(c);
+  const conflict = c[0]==='U'
+    ? 'Apabila kebimbangan penduduk bertembung dengan maruah pekerja, anda bermula dengan <b>undang-undang</b> untuk menyelesaikan punca masalah. Ingat: tegas tidak bermaksud kasar. Hormat dan kesopanan menentukan <b>cara</b> anda bertindak.'
+    : 'Apabila kebimbangan penduduk bertembung dengan maruah pekerja, anda bermula dengan <b>memahami manusia</b>. Ingat: empati tidak bermaksud membiarkan kesalahan. Salah laku tetap diserahkan kepada <b>pihak berkuasa</b>.';
+  let ml, mt;
+  if(r.open>=75){ml='Hati Terbuka';mt='Anda menilai orang sebagai individu, bukan melalui stereotaip. Teruskan, dan bantu orang lain berbuat sama.';}
+  else if(r.open>=50){ml='Masih Berhati-hati';mt='Berhati-hati itu normal, tetapi pastikan ia berdasarkan fakta, bukan stereotaip. Cuba berbual dengan seorang pekerja asing minggu ini.';}
+  else {ml='Ruang untuk Berkembang';mt='Ramai antara kita membesar dengan stereotaip tanpa sedar. Jangan biarkan kesalahan minoriti menghukum majoriti. Mulakan dengan satu senyuman.';}
+
+  const rec = PLEDGES.find(p=>p.k===c[1]+c[3]);
+  const ordered=[rec, ...PLEDGES.filter(p=>p!==rec)];
+  pledge=null;
+
+  const order=['UMIS','UMIT','UMKS','UMKT','UNIS','UNIT','UNKS','UNKT','EMIS','EMIT','EMKS','EMKT','ENIS','ENIT','ENKS','ENKT'];
+
+  app.innerHTML=`
+    <div class="hero">
+      <div class="avatar">${T.e}</div>
+      <div class="kicker">Jenis Harmoni anda</div>
+      <div class="tname">${esc(T.n)}</div>
+      <div class="code">${c.split('').map((l,i)=>`<span style="background:${AXES[i].color}">${l}</span>`).join('')}</div>
+      <p class="tagline">${esc(T.t)}</p>
+    </div>
+
+    <div class="sec">
+      <h3>Profil anda</h3>
+      ${AXES.map(ax=>{
+        const a=r.axes[ax.id], win=a.letter, left=a.pctA;
+        return `<div class="bar">
+          <div class="top"><span class="${win===ax.a?'win':''}">${POLE[ax.a].name} (${ax.a})</span><span>${ax.label}</span><span class="${win===ax.b?'win':''}">${POLE[ax.b].name} (${ax.b})</span></div>
+          <div class="track"><i style="background:${ax.color};${win===ax.a?`left:0;width:${left}%`:`right:0;width:${100-left}%`}"></i></div>
+          <div class="pct" style="color:${ax.color};text-align:${win===ax.a?'left':'right'}">${a.pctWin}% ${POLE[win].name}</div>
+        </div>`;}).join('')}
+    </div>
+
+    <div class="sec">
+      <h3>Susunan keutamaan nilai anda</h3>
+      <div class="vorder">${vo.map((v,i)=>`<div class="vo"><span>${i+1}</span><div>${v.t}<small>${v.d}</small></div></div>`).join('')}</div>
+      <div class="note">${conflict}</div>
+    </div>
+
+    <div class="sec">
+      <h3>Kekuatan anda</h3>
+      <ul class="clean">${strengths.map(s=>`<li data-i="✅">${esc(s)}</li>`).join('')}</ul>
+    </div>
+
+    <div class="sec">
+      <h3>Titik buta</h3>
+      <ul class="clean">${blinds.map(s=>`<li data-i="⚠️">${esc(s)}</li>`).join('')}</ul>
+    </div>
+
+    <div class="sec">
+      <h3>Cadangan tindakan untuk anda</h3>
+      <ul class="clean"><li data-i="👉">${esc(ACTION[c[1]+c[2]])}</li></ul>
+    </div>
+
+    <div class="sec">
+      <h3>Pasangan pelengkap</h3>
+      <div class="mate"><div class="e">${M.e}</div><div><b>${esc(M.n)} (${mateCode})</b>
+        <p>Harmoni perlukan kedua-duanya: <i>tegas berlandaskan undang-undang, beradab mempamerkan kemanusiaan.</i> ${c[0]==='U'?'Jenis ini melengkapkan ketegasan anda dengan empati.':'Jenis ini melengkapkan empati anda dengan ketegasan undang-undang.'}</p></div></div>
+    </div>
+
+    <div class="sec">
+      <h3>Meter Keterbukaan</h3>
+      <div class="mlabel">${ml} · ${r.open}%</div>
+      <div class="meter"><i style="left:${Math.min(98,Math.max(2,r.open))}%"></i></div>
+      <p style="font-size:15px;color:var(--ink)">${esc(mt)}</p>
+      <p class="private">🔒 Hanya anda yang melihat keputusan ini.</p>
+    </div>
+
+    <div class="sec">
+      <h3>Semua 16 Jenis Harmoni</h3>
+      <div class="grid16">${order.map(k=>`<div class="t16 ${k===c?'me':''} ${k===mateCode?'mate16':''}"><div class="e">${TYPES[k].e}</div><div class="c">${k}</div><div class="n">${esc(TYPES[k].n)}</div></div>`).join('')}</div>
+      <div class="legend"><span><i style="background:var(--red-soft);border:2px solid var(--red)"></i>Anda</span><span><i style="border:2px dashed var(--teal)"></i>Pasangan pelengkap</span></div>
+    </div>
+
+    <div class="sec">
+      <h3>Ikrar saya</h3>
+      <p style="font-size:15px;margin-bottom:10px">Pilih SATU tindakan yang anda sanggup lakukan minggu ini.</p>
+      <div class="pledges">${ordered.map((p,i)=>`<button class="pl" data-i="${PLEDGES.indexOf(p)}">${i===0?'<em>Disyorkan untuk jenis anda</em><br>':''}${esc(p.t)}</button>`).join('')}</div>
+      <button class="primary" id="done" disabled>Jana Kad Harmoni Saya ➜</button>
+    </div>`;
+
+  const done=document.getElementById('done');
+  app.querySelectorAll('.pl').forEach(b=>b.onclick=()=>{
+    app.querySelectorAll('.pl').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); pledge=PLEDGES[+b.dataset.i].t; done.disabled=false;
+  });
+  done.onclick=()=>{ if(pledge){screen='card';render();scrollUp();} };
+}
+
+function card(){
+  const r=result, T=TYPES[r.code], c=r.code, vo=valueOrder(c);
+  app.innerHTML=`
+    <div class="certificate">
+      <div class="avatar" style="width:80px;height:80px;font-size:44px">${T.e}</div>
+      <div class="kicker">Kad Harmoni</div>
+      <div class="tname">${esc(T.n)}</div>
+      <div class="code">${c.split('').map((l,i)=>`<span style="background:${AXES[i].color}">${l}</span>`).join('')}</div>
+      <div class="pledge">"${esc(pledge)}"</div>
+      <div class="mini">
+        <div>Nilai utama<b>${vo[0].t}</b></div>
+        <div>Pasangan pelengkap<b>${TYPES[(c[0]==='U'?'E':'U')+c.slice(1)].n}</b></div>
+        <div>Pentas<b>${POLE[c[1]].name}</b></div>
+        <div>Gaya<b>${POLE[c[3]].name}</b></div>
+      </div>
+      <div class="motto">Hormati mereka. Jangan biarkan kesalahan minoriti menghukum majoriti.</div>
+    </div>
+    <p class="hint">📸 Tangkap layar kad ini.<br>Kemudian <b>tampal pelekat pada jenis anda di Peta 16 Jenis</b> dan <b>tulis ikrar anda di Dinding Ikrar</b> di stesen kami!</p>
+    <div class="stack">
+      <button class="ghost" id="bk">← Lihat profil penuh</button>
+      <button class="ghost" id="ag">Cuba semula</button>
+    </div>`;
+  document.getElementById('bk').onclick=()=>{screen='results';const p=pledge;render();
+    const btn=[...app.querySelectorAll('.pl')].find(b=>PLEDGES[+b.dataset.i].t===p); if(btn) btn.click(); };
+  document.getElementById('ag').onclick=()=>{answers.fill(null);qi=0;pledge=null;screen='intro';render();scrollUp();};
+}
+
+render();
+</script>
+</body>
+</html>
