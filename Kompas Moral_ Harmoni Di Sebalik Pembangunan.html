@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kompas Moral: Harmoni Di Sebalik Pembangunan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2a1f4a; --muted:#5d5578; --paper:#f4f2f8; --card:#ffffff;
+    --purple:#5b4b9a; --purple-2:#7b6cc0; --red:#c8323c; --red-soft:#fbe4e5;
+    --gold:#e9c43a; --gold-soft:#fdf5d6; --green:#2f8a5b; --green-soft:#e2f3ea;
+    --line:#ddd8ea;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100%}
+  body{
+    font-family:"Nunito",system-ui,sans-serif;color:var(--ink);
+    background:linear-gradient(170deg,#7b84c9 0%,#a7a7cf 40%,#e8d77a 100%) fixed;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:18px 16px 40px;min-height:100vh;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;color:#fff}
+  .brand{font-family:"Lilita One",cursive;font-size:18px;letter-spacing:.3px;text-shadow:0 1px 0 rgba(0,0,0,.15)}
+  .score{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);padding:5px 11px;border-radius:999px;font-weight:800;font-size:14px}
+  .progress{height:8px;background:rgba(255,255,255,.35);border-radius:99px;overflow:hidden;margin-bottom:16px}
+  .progress i{display:block;height:100%;width:0;background:var(--red);border-radius:99px;transition:width .35s ease}
+  .card{background:var(--card);border-radius:20px;padding:22px 20px;box-shadow:0 10px 30px rgba(42,31,74,.18);flex:1;display:flex;flex-direction:column}
+  .tag{display:inline-block;align-self:flex-start;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:4px 10px;border-radius:99px;background:var(--gold-soft);color:#8a6d00;margin-bottom:12px}
+  h1{font-family:"Lilita One",cursive;font-weight:400;font-size:30px;line-height:1.08;color:var(--purple);margin-bottom:10px}
+  h2{font-family:"Lilita One",cursive;font-weight:400;font-size:23px;line-height:1.2;color:var(--ink);margin-bottom:10px}
+  p{font-size:16px;line-height:1.5;color:var(--muted)}
+  .lead{font-size:17px;color:var(--ink);margin-bottom:14px}
+  .scene{background:var(--paper);border-left:4px solid var(--purple-2);border-radius:10px;padding:12px 14px;font-size:16px;line-height:1.5;color:var(--ink);margin-bottom:16px}
+  .opts{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+  button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .opt{text-align:left;width:100%;background:#fff;border:2px solid var(--line);border-radius:14px;padding:13px 14px;font-size:16px;font-weight:700;color:var(--ink);display:flex;gap:12px;align-items:flex-start;transition:border-color .15s,background .15s,transform .08s}
+  .opt:active{transform:scale(.99)}
+  .opt:hover{border-color:var(--purple-2)}
+  .opt .k{flex:0 0 28px;height:28px;border-radius:50%;background:var(--paper);display:grid;place-items:center;font-weight:800;font-size:14px;color:var(--purple)}
+  .opt.good{border-color:var(--green);background:var(--green-soft)}
+  .opt.bad{border-color:var(--red);background:var(--red-soft)}
+  .opt.meh{border-color:var(--gold);background:var(--gold-soft)}
+  .opt[disabled]{cursor:default}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto}
+  .big{border:none;border-radius:14px;padding:16px 10px;font-weight:800;font-size:17px;color:#fff}
+  .big.st{background:var(--red)} .big.fk{background:var(--green)}
+  .big[disabled]{opacity:.45;cursor:default}
+  .fb{margin-top:14px;border-radius:14px;padding:14px;font-size:15.5px;line-height:1.5;display:none}
+  .fb.show{display:block;animation:pop .25s ease}
+  .fb.good{background:var(--green-soft);color:#1e5a3b}
+  .fb.bad{background:var(--red-soft);color:#7d1c23}
+  .fb.meh{background:var(--gold-soft);color:#6b5400}
+  .fb b{display:block;margin-bottom:4px;font-size:16px}
+  .val{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:800;background:#fff;border-radius:99px;padding:3px 10px;color:var(--purple)}
+  .next{margin-top:14px;width:100%;border:none;border-radius:14px;padding:15px;background:var(--purple);color:#fff;font-weight:800;font-size:17px;display:none}
+  .next.show{display:block}
+  .primary{margin-top:auto;width:100%;border:none;border-radius:14px;padding:16px;background:var(--red);color:#fff;font-weight:800;font-size:18px;box-shadow:0 4px 0 #8f1f27}
+  .primary:active{transform:translateY(2px);box-shadow:0 2px 0 #8f1f27}
+  .steps{display:grid;gap:10px;margin:6px 0 20px}
+  .step{display:flex;gap:12px;align-items:center;background:var(--paper);border-radius:12px;padding:11px 12px;font-weight:700;font-size:15px}
+  .step span{flex:0 0 32px;height:32px;border-radius:10px;background:var(--purple);color:#fff;display:grid;place-items:center;font-family:"Lilita One";font-size:17px}
+  .rank{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+  .rk{position:relative;text-align:left;width:100%;background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px 12px 54px;font-size:15.5px;font-weight:700;color:var(--ink);min-height:62px}
+  .rk small{display:block;font-weight:600;color:var(--muted);font-size:13px;margin-top:2px}
+  .rk .n{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;border:2px dashed var(--line);display:grid;place-items:center;font-family:"Lilita One";font-size:17px;color:#fff}
+  .rk.on{border-color:var(--purple)}
+  .rk.on .n{background:var(--purple);border:none}
+  .reset{background:none;border:none;color:var(--purple);font-weight:800;font-size:14px;text-decoration:underline;align-self:flex-start;margin-bottom:6px}
+  .pledges{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+  .pl{text-align:left;background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15.5px;font-weight:700;color:var(--ink)}
+  .pl.on{border-color:var(--red);background:var(--red-soft)}
+  .certificate{border:3px solid var(--gold);border-radius:18px;padding:20px 16px;text-align:center;background:linear-gradient(180deg,#fffdf3,#fff)}
+  .badge{font-size:46px;line-height:1;margin-bottom:6px}
+  .certificate h1{font-size:26px;margin-bottom:4px}
+  .certificate .lvl{font-weight:800;color:var(--red);font-size:15px;margin-bottom:12px}
+  .certificate .pledge{font-size:16.5px;font-weight:700;color:var(--ink);background:var(--paper);border-radius:12px;padding:12px;margin:12px 0}
+  .certificate .order{font-size:14px;color:var(--muted);text-align:left;background:var(--paper);border-radius:12px;padding:10px 12px}
+  .certificate .order ol{margin:6px 0 0 20px}
+  .motto{margin-top:14px;font-family:"Lilita One";font-size:17px;color:var(--purple);line-height:1.3}
+  .hint{text-align:center;font-size:13px;color:var(--muted);margin-top:12px}
+  .again{margin-top:12px;width:100%;border:2px solid var(--purple);background:#fff;color:var(--purple);border-radius:14px;padding:13px;font-weight:800;font-size:16px}
+  .hib{font-size:34px}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🌺 Kompas Moral</div>
+    <div class="score" id="score">0 mata</div>
+  </header>
+  <div class="progress"><i id="bar"></i></div>
+  <main class="card" id="app"></main>
+</div>
+
+<script>
+const R1 = [
+  {s:"Pekerja asing banyak mengisi kekurangan tenaga kerja dalam sektor 3D seperti pembinaan dan pembersihan.", a:"fakta",
+   why:"Sektor 3D (Difficult, Dirty, Dangerous) kurang diminati pekerja tempatan. Pekerja asing ialah antara tulang belakang pembangunan fizikal negara."},
+  {s:"Semua pekerja asing pengotor dan tidak tahu menjaga kebersihan.", a:"stereotaip",
+   why:"Ini generalisasi. Isu kebersihan selalunya berpunca daripada kuarters yang sesak dan tidak kondusif, bukan sifat sesuatu bangsa."},
+  {s:"Jika seorang pekerja asing melakukan jenayah, maka semua pekerja asing berbahaya.", a:"stereotaip",
+   why:"Jangan biarkan kesalahan minoriti menghukum majoriti. Kesalahan individu diserahkan kepada pihak berkuasa."}
+];
+
+const R2 = [
+  {scene:"Anda ternampak video tular di TikTok yang mengejek loghat dan pakaian seorang pekerja asing. Ruang komen penuh dengan ejekan.",
+   q:"Apa yang anda buat?",
+   o:[
+    {t:"Tekan 'like' dan kongsi. Lawak saja.", r:"bad", p:0, f:"Berkongsi bermakna kita turut menyebarkan buli siber. Tidak beradab di media sosial."},
+    {t:"Tinggalkan komen yang menegur dengan sopan, kemudian 'report' video itu.", r:"good", p:10, f:"Tepat! Anda memelihara adab di alam maya dan berani menegur dengan berhemah."},
+    {t:"Scroll sahaja. Bukan urusan saya.", r:"meh", p:4, f:"Tidak menyakiti sesiapa, tetapi diam juga membiarkan budaya menghina berterusan."}
+   ], v:"Kesopanan & Kesusilaan (Rukun Negara)"},
+  {scene:"Seorang pekerja asing di tapak pembinaan dituduh mencuri telefon. Beberapa orang penduduk mula berkumpul dan mahu 'mengajar' dia.",
+   q:"Apa tindakan paling wajar?",
+   o:[
+    {t:"Sertai mereka. Dia patut dihukum.", r:"bad", p:0, f:"Menghukum sendiri melanggar undang-undang, dan dia belum tentu bersalah."},
+    {t:"Rakam dan viralkan supaya semua orang tahu.", r:"meh", p:3, f:"Memviralkan tuduhan yang belum disahkan boleh memalukan orang yang tidak bersalah."},
+    {t:"Tenangkan keadaan dan hubungi polis supaya kes disiasat.", r:"good", p:10, f:"Betul! Salah laku diserahkan kepada pihak berkuasa, bukan diadili oleh orang ramai."}
+   ], v:"Kedaulatan Undang-Undang (Rukun Negara)"},
+  {scene:"Setiap pagi, seorang pekerja pembersihan warga asing membersihkan dewan kuliah anda. Ramai pelajar lalu tanpa memandangnya.",
+   q:"Apa yang anda buat?",
+   o:[
+    {t:"Senyum dan ucap 'terima kasih' apabila lalu.", r:"good", p:10, f:"Satu senyuman pun memartabatkan maruah. Inilah semangat Hormat dalam Malaysia MADANI."},
+    {t:"Jaga jarak, takut jika dia buat sesuatu.", r:"bad", p:0, f:"Ketakutan tanpa sebab ialah prejudis. Dia rakan sekampus yang menjaga keselesaan kita."},
+    {t:"Tidak perlu buat apa-apa, itu memang kerjanya.", r:"meh", p:4, f:"Benar, itu kerjanya. Tetapi menghargai kerja orang lain tidak memerlukan sebab."}
+   ], v:"Hormat (Gagasan Malaysia MADANI)"}
+];
+
+const VALUES = [
+  {id:"law", t:"Kedaulatan Undang-Undang", d:"Tegas: majikan wajib sediakan kuarters layak, jenayah diserah kepada polis"},
+  {id:"hormat", t:"Hormat (MADANI)", d:"Layan mereka dengan empati, tanpa memandang rendah"},
+  {id:"sopan", t:"Kesopanan & Kesusilaan", d:"Jaga adab, termasuk di media sosial"}
+];
+
+const PLEDGES = [
+  "Saya tidak akan berkongsi kandungan yang menghina pekerja asing.",
+  "Saya akan senyum dan ucap terima kasih kepada pekerja yang membantu kita.",
+  "Saya akan serahkan salah laku kepada pihak berkuasa, bukan menghukum sendiri.",
+  "Saya akan menegur rakan yang bersikap 'superiority complex' dengan berhemah."
+];
+
+const TOTAL_STEPS = 1 + R1.length + R2.length + 1 + 1 + 1;
+let step=0, score=0, rankOrder=[], pledge=null;
+const app=document.getElementById('app');
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function setProgress(){
+  document.getElementById('bar').style.width = Math.min(100, step/(TOTAL_STEPS-1)*100)+'%';
+  document.getElementById('score').textContent = score+' mata';
+}
+function next(){ step++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+function render(){
+  setProgress();
+  if(step===0) return intro();
+  let i=step-1;
+  if(i<R1.length) return round1(i);
+  i-=R1.length;
+  if(i<R2.length) return round2(i);
+  i-=R2.length;
+  if(i===0) return round3();
+  if(i===1) return pledgeScreen();
+  return result();
+}
+
+function intro(){
+  app.innerHTML=`
+    <div class="hib">🌺</div>
+    <h1>Harmoni Di Sebalik Pembangunan</h1>
+    <p class="lead">Uji kompas moral anda dalam 2 minit. Adakah anda menepis stereotaip, atau terperangkap di dalamnya?</p>
+    <div class="steps">
+      <div class="step"><span>1</span>Stereotaip atau Fakta?</div>
+      <div class="step"><span>2</span>Dilema Bermasyarakat</div>
+      <div class="step"><span>3</span>Susun Keutamaan Nilai</div>
+      <div class="step"><span>4</span>Ikrar Saya</div>
+    </div>
+    <button class="primary" id="go">Mula ➜</button>`;
+  document.getElementById('go').onclick=next;
+}
+
+function round1(i){
+  const q=R1[i];
+  app.innerHTML=`
+    <span class="tag">Pusingan 1 · ${i+1}/${R1.length}</span>
+    <h2>Stereotaip atau Fakta?</h2>
+    <div class="scene">"${esc(q.s)}"</div>
+    <div class="two">
+      <button class="big st" data-a="stereotaip">Stereotaip</button>
+      <button class="big fk" data-a="fakta">Fakta</button>
+    </div>
+    <div class="fb" id="fb"></div>
+    <button class="next" id="nx">Seterusnya ➜</button>`;
+  app.querySelectorAll('.big').forEach(b=>b.onclick=()=>{
+    const ok=b.dataset.a===q.a;
+    if(ok) score+=5;
+    app.querySelectorAll('.big').forEach(x=>x.disabled=true);
+    const fb=document.getElementById('fb');
+    fb.className='fb show '+(ok?'good':'bad');
+    fb.innerHTML=`<b>${ok?'✅ Betul!':'❌ Kurang tepat.'} Ini ${q.a==='fakta'?'FAKTA':'STEREOTAIP'}.</b>${esc(q.why)}`;
+    document.getElementById('nx').classList.add('show');
+    setProgress();
+  });
+  document.getElementById('nx').onclick=next;
+}
+
+function round2(i){
+  const q=R2[i];
+  app.innerHTML=`
+    <span class="tag">Pusingan 2 · Dilema ${i+1}/${R2.length}</span>
+    <div class="scene">${esc(q.scene)}</div>
+    <h2>${esc(q.q)}</h2>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${'ABC'[k]}</span><span>${esc(o.t)}</span></button>`).join('')}</div>
+    <div class="fb" id="fb"></div>
+    <button class="next" id="nx">Seterusnya ➜</button>`;
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    const o=q.o[+b.dataset.k];
+    score+=o.p;
+    app.querySelectorAll('.opt').forEach((x,k)=>{x.disabled=true; if(q.o[k].r==='good') x.classList.add('good');});
+    b.classList.add(o.r);
+    const fb=document.getElementById('fb');
+    const head={good:'🌟 Sikap yang matang!',meh:'🤔 Hampir...',bad:'⚠️ Fikir semula.'}[o.r];
+    fb.className='fb show '+o.r;
+    fb.innerHTML=`<b>${head}</b>${esc(o.f)}<br><span class="val">Nilai: ${esc(q.v)}</span>`;
+    document.getElementById('nx').classList.add('show');
+    setProgress();
+  });
+  document.getElementById('nx').onclick=next;
+}
+
+function round3(){
+  rankOrder=[];
+  app.innerHTML=`
+    <span class="tag">Pusingan 3 · Konflik Nilai</span>
+    <div class="scene">Penduduk taman perumahan anda mengadu kuarters pekerja asing berdekatan sesak, kotor dan menimbulkan rasa tidak selamat. Ada yang mahu menghalau mereka.</div>
+    <h2>Susun nilai mengikut keutamaan anda</h2>
+    <p style="margin-bottom:12px">Tekan ikut urutan: 1 = paling utama.</p>
+    <div class="rank" id="rank">${VALUES.map(v=>`<button class="rk" data-id="${v.id}"><span class="n"></span>${esc(v.t)}<small>${esc(v.d)}</small></button>`).join('')}</div>
+    <button class="reset" id="rs">Susun semula</button>
+    <div class="fb" id="fb"></div>
+    <button class="next" id="nx">Seterusnya ➜</button>`;
+  const paint=()=>{
+    app.querySelectorAll('.rk').forEach(b=>{
+      const n=rankOrder.indexOf(b.dataset.id);
+      b.classList.toggle('on',n>-1);
+      b.querySelector('.n').textContent=n>-1?n+1:'';
+    });
+  };
+  app.querySelectorAll('.rk').forEach(b=>b.onclick=()=>{
+    if(rankOrder.length===3||rankOrder.includes(b.dataset.id)) return;
+    rankOrder.push(b.dataset.id); paint();
+    if(rankOrder.length===3){
+      score+=10;
+      const fb=document.getElementById('fb');
+      fb.className='fb show good';
+      fb.innerHTML=`<b>Tiada jawapan salah di sini. Yang penting, alasan anda.</b>
+        Pendirian kami: <b style="display:inline">Kedaulatan Undang-Undang</b> diutamakan untuk menyelesaikan punca masalah (majikan wajib sediakan kuarters kondusif), dan <b style="display:inline">Hormat</b> serta <b style="display:inline">Kesopanan</b> memastikan cara kita bertindak tetap berperikemanusiaan, bukan menghalau atau menghina.
+        <span class="val">Tegas berlandaskan undang-undang, beradab mempamerkan kemanusiaan</span>`;
+      document.getElementById('nx').classList.add('show');
+      setProgress();
+    }
+  });
+  document.getElementById('rs').onclick=()=>{
+    if(rankOrder.length===3) return;
+    rankOrder=[]; paint();
+  };
+  document.getElementById('nx').onclick=next;
+}
+
+function pledgeScreen(){
+  pledge=null;
+  app.innerHTML=`
+    <span class="tag">Ikrar Saya</span>
+    <h2>Pilih SATU tindakan yang anda sanggup lakukan minggu ini</h2>
+    <div class="pledges">${PLEDGES.map((p,k)=>`<button class="pl" data-k="${k}">${esc(p)}</button>`).join('')}</div>
+    <button class="primary" id="done" disabled style="opacity:.5">Lihat Kad Kompas Saya ➜</button>`;
+  const done=document.getElementById('done');
+  app.querySelectorAll('.pl').forEach(b=>b.onclick=()=>{
+    app.querySelectorAll('.pl').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); pledge=PLEDGES[+b.dataset.k];
+    done.disabled=false; done.style.opacity=1;
+  });
+  done.onclick=()=>{ if(pledge){ score+=5; next(); } };
+}
+
+function result(){
+  const max=R1.length*5+R2.length*10+10+5;
+  let badge,lvl;
+  if(score>=max-4){badge='🧭';lvl='Duta Harmoni MADANI';}
+  else if(score>=max-16){badge='🌺';lvl='Rakyat Berhemah';}
+  else {badge='🌱';lvl='Sedang Belajar Empati';}
+  const names=Object.fromEntries(VALUES.map(v=>[v.id,v.t]));
+  app.innerHTML=`
+    <div class="certificate">
+      <div class="badge">${badge}</div>
+      <h1>Kad Kompas Moral</h1>
+      <div class="lvl">${lvl} · ${score}/${max} mata</div>
+      <div class="pledge">"${esc(pledge||'')}"</div>
+      <div class="order">Keutamaan nilai saya:<ol>${rankOrder.map(id=>`<li>${esc(names[id])}</li>`).join('')}</ol></div>
+      <div class="motto">Hormati mereka. Jangan biarkan kesalahan minoriti menghukum majoriti.</div>
+    </div>
+    <p class="hint">📸 Tunjukkan skrin ini di stesen kami & tulis ikrar anda pada Dinding Ikrar!</p>
+    <button class="again" id="ag">Main semula</button>`;
+  document.getElementById('ag').onclick=()=>{step=0;score=0;render();};
+}
+
+render();
+</script>
+</body>
+</html>
